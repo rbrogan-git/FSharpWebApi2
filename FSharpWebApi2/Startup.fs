@@ -10,6 +10,7 @@ open Microsoft.AspNetCore.HttpsPolicy;
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open Swashbuckle.AspNetCore.Swagger
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -18,6 +19,11 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
+        // Add swagger
+        let i  = Info()
+        i.Title <- "My API V1"
+        i.Version <- "v1"
+        services.AddSwaggerGen(fun c -> c.SwaggerDoc("v1", i) |> ignore) |> ignore
         // Add framework services.
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1) |> ignore
 
@@ -25,6 +31,8 @@ type Startup private () =
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
         if (env.IsDevelopment()) then
             app.UseDeveloperExceptionPage() |> ignore
+            app.UseSwagger() |> ignore
+            app.UseSwaggerUI(fun c -> c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1") |> ignore) |> ignore
         else
             app.UseHsts() |> ignore
 
