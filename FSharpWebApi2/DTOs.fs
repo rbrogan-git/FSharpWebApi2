@@ -1,4 +1,5 @@
-﻿module DTOs
+﻿namespace DTOs
+open Domain
 [<CLIMutable>]
 type CustomerInfoDto = {
     FirstName : string
@@ -13,3 +14,18 @@ type OrderFormDto = {
     //BillingAddress : AddressDto
     //Lines : OrderFormLineDto list
     }
+type ValidationError = {
+    FieldName : string
+    ErrorDescription : string
+    }
+
+module CustomerInfoDto =
+    type ValidateCustomer =
+        OrderFormDto -> Result<ValidatedCustomer,ValidationError list>
+    let validateCustomer  customerInfoDto  =
+        let cust =
+            { FName = customerInfoDto.FirstName
+              LName = customerInfoDto.LastName
+              Email = customerInfoDto.EmailAddress
+            }
+        cust

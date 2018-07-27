@@ -24,8 +24,8 @@ type OrdersController () =
 
     [<HttpPost>]
     member this.Post([<FromBody>] value : OrderFormDto) =
-        value
-
+        DTOs.CustomerInfoDto.validateCustomer value.CustomerInfo
+        
     [<HttpPut("{id}")>]
     member this.Put(id:int, [<FromBody>] value:string ) =
         ()
